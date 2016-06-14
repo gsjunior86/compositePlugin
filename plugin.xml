@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.debug.core.launchConfigurationTypes">
+      <launchConfigurationType
+            id="br.geraldo.composite.compositeLaunchType"
+            delegate="br.geraldo.composite.delegate.CompositeDelegate"
+            name="Composite Run"
+            modes="run, debug">
+      </launchConfigurationType>
+   </extension>
+   
+   
+   <extension
+    point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+    <launchConfigurationTabGroup
+        class="br.geraldo.composite.ui.CompositeTabGroup"
+        id="com.example.compositeLaunchConfigurationTabGroup"
+        type="br.geraldo.composite.compositeLaunchType">
+    </launchConfigurationTabGroup>
+</extension> 
+   
+
+
+</plugin>

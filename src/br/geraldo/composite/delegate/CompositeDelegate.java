@@ -1,8 +1,6 @@
 package br.geraldo.composite.delegate;
 
 import org.eclipse.core.runtime.CoreException;
-
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;

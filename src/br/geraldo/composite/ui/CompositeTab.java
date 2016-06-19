@@ -2,6 +2,7 @@ package br.geraldo.composite.ui;
 
 
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
@@ -75,7 +76,12 @@ public class CompositeTab extends AbstractLaunchConfigurationTab {
 		table.setVisible(true);
 		
 		tableViewer.setContentProvider(new ArrayContentProvider());
-		tableViewer.setInput(ModelSource.getInstance().getConfigList());
+		try {
+			tableViewer.setInput(ModelSource.getInstance(manager.getLaunchConfigurations()).getConfigList());
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		GridData gridData = new GridData();
 	    gridData.verticalAlignment = GridData.FILL;

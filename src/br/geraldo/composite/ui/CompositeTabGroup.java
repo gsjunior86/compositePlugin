@@ -12,5 +12,6 @@ public class CompositeTabGroup extends AbstractLaunchConfigurationTabGroup {
 		setTabs(new ILaunchConfigurationTab[] {new CompositeTab(), new CommonTab()} );
 		
 	}
+	
 
 }

@@ -4,10 +4,11 @@ package br.geraldo.composite.ui;
 
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
+import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.viewers.CheckboxTableViewer;
+import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -16,10 +17,12 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
 import br.geraldo.composite.ui.table.Configuration;
+import br.geraldo.composite.ui.table.ModelSource;
 
 public class CompositeTab extends AbstractLaunchConfigurationTab {
 
@@ -27,8 +30,12 @@ public class CompositeTab extends AbstractLaunchConfigurationTab {
 	private TableViewer tableViewer;
 	private static final String COLUMN_NAME = "Name";
 	private static final String COLUMN_TYPE = "Type";
+	private final ILaunchManager manager;
 	
 	
+	public CompositeTab() {
+		manager = getLaunchManager();
+	}
 	
 	@Override
 	public void createControl(Composite parent) {
@@ -43,8 +50,42 @@ public class CompositeTab extends AbstractLaunchConfigurationTab {
 
 	    text = new Text(comp, SWT.BORDER);
 	    text.setMessage("Console Text");
-	    GridDataFactory.fillDefaults().grab(true, false).applyTo(text);	
+	    GridDataFactory.fillDefaults().grab(true, false).applyTo(text);
+	    
+	    createTableViewer(comp);
+	   
 	}
+	
+	/**
+	 * Method responsible for initialize the table viewer object
+	 * 
+	 * @author Geraldo
+	 * 
+	 */
+	
+	public void createTableViewer(Composite parent){
+		tableViewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL
+        | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
+		createColumns(tableViewer);
+		
+		final Table table = tableViewer.getTable();
+		table.setHeaderVisible(true);
+		table.setLinesVisible(true);
+		table.setBounds(39, 27, 366, 190);
+		table.setVisible(true);
+		
+		tableViewer.setContentProvider(new ArrayContentProvider());
+		tableViewer.setInput(ModelSource.getInstance().getConfigList());
+		
+		GridData gridData = new GridData();
+	    gridData.verticalAlignment = GridData.FILL;
+	    gridData.horizontalSpan = 2;
+	    gridData.grabExcessHorizontalSpace = true;
+	    gridData.grabExcessVerticalSpace = true;
+	    gridData.horizontalAlignment = GridData.FILL;
+	    tableViewer.getControl().setLayoutData(gridData);
+	}
+	
 	/**
 	 * Method that initializes the table's columns
 	 * 
@@ -84,6 +125,7 @@ public class CompositeTab extends AbstractLaunchConfigurationTab {
 		
 		
 	}
+	
 	
 	public TableViewerColumn createTableViewerColumn(String title, int bound, final int colNumber){
 		final TableViewerColumn viewerColumn = new TableViewerColumn(tableViewer, SWT.NONE);

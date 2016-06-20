@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: CompositeRun
 Bundle-SymbolicName: br.geraldo.compositeRun;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: br.geraldo.composite.Activator
+Bundle-Activator: br.geraldo.composite.CompositePlugin
 Bundle-Vendor: Xored
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,

@@ -3,12 +3,12 @@ package br.geraldo.composite.ui.table;
 public class Configuration {
 
 	
-	private boolean checked;
+	private String memento;
 	private String name;
 	private String type;
 	
-	public Configuration(boolean checked, String name, String type){
-		this.checked = checked;
+	public Configuration(String memento, String name, String type){
+		this.memento = memento;
 		this.name = name;
 		this.type = type;
 	}
@@ -18,13 +18,17 @@ public class Configuration {
 	public boolean equals(Object obj) {
 		return (((Configuration)obj).getName().equals(this.name) && ((Configuration)obj).getType().equals(this.type)) ;
 	}
-	
-	public boolean isChecked() {
-		return checked;
+
+	public String getMemento() {
+		return memento;
 	}
-	public void setChecked(boolean checked) {
-		this.checked = checked;
+
+
+	public void setMemento(String memento) {
+		this.memento = memento;
 	}
+
+
 	public String getName() {
 		return name;
 	}

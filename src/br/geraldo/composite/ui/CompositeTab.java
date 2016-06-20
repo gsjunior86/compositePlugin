@@ -2,7 +2,9 @@ package br.geraldo.composite.ui;
 
 
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -27,6 +29,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
+import br.geraldo.composite.CompositePlugin;
 import br.geraldo.composite.ui.table.Configuration;
 import br.geraldo.composite.ui.table.ModelSource;
 
@@ -197,7 +200,17 @@ public class CompositeTab extends AbstractLaunchConfigurationTab {
 	@Override
 	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
 		configuration.setAttribute("texto", text.getText());
+		List<ILaunchConfiguration> listConfigurations = new ArrayList<ILaunchConfiguration>();
+		for(Configuration c : selected){
+			try {
+				listConfigurations.add(manager.getLaunchConfiguration(c.getMemento()));
+			} catch (CoreException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		
+		CompositePlugin.setConfigurations(listConfigurations);
 	}
 	
 	

@@ -22,7 +22,7 @@ public class ModelSource {
 				if(launchConfiguration.getType().getName().equals(CompositeTabGroup.LAUNCH_NAME)){
 					continue;
 				}
-				configList.add(new Configuration(false,launchConfiguration.getName(),launchConfiguration.getType().getName()));
+				configList.add(new Configuration(launchConfiguration.getMemento(),launchConfiguration.getName(),launchConfiguration.getType().getName()));
 			} catch (CoreException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

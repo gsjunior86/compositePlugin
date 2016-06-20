@@ -12,10 +12,11 @@ public class CompositeDelegate implements ILaunchConfigurationDelegate{
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor)
 			throws CoreException {
 		
+		
 		configuration.launch(mode, monitor);
 		
 	}
-	
+
 	
 
 }

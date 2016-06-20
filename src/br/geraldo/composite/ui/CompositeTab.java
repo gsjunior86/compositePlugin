@@ -2,6 +2,9 @@ package br.geraldo.composite.ui;
 
 
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
@@ -16,8 +19,10 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
@@ -32,10 +37,17 @@ public class CompositeTab extends AbstractLaunchConfigurationTab {
 	private static final String COLUMN_NAME = "Name";
 	private static final String COLUMN_TYPE = "Type";
 	private final ILaunchManager manager;
+	private Set<Configuration> selected;
 	
 	
 	public CompositeTab() {
 		manager = getLaunchManager();
+	}
+	
+	@Override
+	public boolean canSave() {
+		// TODO Auto-generated method stub
+		return true;
 	}
 	
 	@Override
@@ -50,8 +62,10 @@ public class CompositeTab extends AbstractLaunchConfigurationTab {
 	    GridDataFactory.swtDefaults().applyTo(label);
 
 	    text = new Text(comp, SWT.BORDER);
-	    text.setMessage("Console Text");
+	    text.setMessage("");
 	    GridDataFactory.fillDefaults().grab(true, false).applyTo(text);
+	    
+	    selected = new LinkedHashSet<Configuration>();
 	    
 	    createTableViewer(comp);
 	   
@@ -66,14 +80,32 @@ public class CompositeTab extends AbstractLaunchConfigurationTab {
 	
 	public void createTableViewer(Composite parent){
 		tableViewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL
-        | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
+        | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER | SWT.CHECK);
 		createColumns(tableViewer);
 		
 		final Table table = tableViewer.getTable();
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
-		table.setBounds(39, 27, 366, 190);
+
 		table.setVisible(true);
+		table.addListener(SWT.Selection, new Listener() {
+		      public void handleEvent(Event event) {
+		    	  Configuration c = (Configuration) event.item.getData();
+		    	  if (event.detail == SWT.CHECK) {
+			    	  if(selected.contains(c)){
+			    		  selected.remove(c);
+			    	  }else{
+			    		  selected.add(c);
+			    	  }
+		    	  }
+//			        if (event.detail == SWT.CHECK) {
+//			          text.setText("You checked " + event.item);
+//			        } else {
+//			          text.setText("You selected " + event.item);
+//			        }
+			      }
+		});
+		
 		
 		tableViewer.setContentProvider(new ArrayContentProvider());
 		try {
@@ -100,7 +132,7 @@ public class CompositeTab extends AbstractLaunchConfigurationTab {
 	 */
 	public void createColumns(TableViewer tableViewer){
 		String[] titles = {"",COLUMN_NAME,COLUMN_TYPE};
-		int[] bounds = { 100, 100, 100};
+		int[] bounds = { 50, 160, 150};
 		
 		TableViewerColumn colChecked = createTableViewerColumn(titles[0], bounds[0], 0);
 		colChecked.setLabelProvider(new ColumnLabelProvider() {
@@ -152,15 +184,23 @@ public class CompositeTab extends AbstractLaunchConfigurationTab {
 
 	@Override
 	public void initializeFrom(ILaunchConfiguration configuration) {
-		// TODO Auto-generated method stub
+		try {
+		      String consoleText = configuration.getAttribute("texto",
+		          "Simon says \"RUN!\"");
+		      text.setText(consoleText);
+		    } catch (CoreException e) {
+		      // ignore here
+		    }
 		
 	}
 
 	@Override
 	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
-		// TODO Auto-generated method stub
+		configuration.setAttribute("texto", text.getText());
 		
 	}
+	
+	
 
 	@Override
 	public String getName() {

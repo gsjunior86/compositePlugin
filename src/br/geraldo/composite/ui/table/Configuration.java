@@ -13,8 +13,10 @@ public class Configuration {
 		this.type = type;
 	}
 	
-	public Configuration(){
-		
+	
+	@Override
+	public boolean equals(Object obj) {
+		return (((Configuration)obj).getName().equals(this.name) && ((Configuration)obj).getType().equals(this.type)) ;
 	}
 	
 	public boolean isChecked() {

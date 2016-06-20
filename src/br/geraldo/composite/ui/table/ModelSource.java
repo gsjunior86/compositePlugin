@@ -6,6 +6,8 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunchConfiguration;
 
+import br.geraldo.composite.ui.CompositeTabGroup;
+
 public class ModelSource {
 	
 	private List<Configuration> configList;
@@ -15,7 +17,11 @@ public class ModelSource {
 		configList = new ArrayList<Configuration>();
 		
 		for(ILaunchConfiguration launchConfiguration: iLaunchConfigurations){
+			
 			try {
+				if(launchConfiguration.getType().getName().equals(CompositeTabGroup.LAUNCH_NAME)){
+					continue;
+				}
 				configList.add(new Configuration(false,launchConfiguration.getName(),launchConfiguration.getType().getName()));
 			} catch (CoreException e) {
 				// TODO Auto-generated catch block

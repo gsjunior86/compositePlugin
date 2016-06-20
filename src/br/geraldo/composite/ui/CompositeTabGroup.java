@@ -6,6 +6,8 @@ import org.eclipse.debug.ui.ILaunchConfigurationDialog;
 import org.eclipse.debug.ui.ILaunchConfigurationTab;
 
 public class CompositeTabGroup extends AbstractLaunchConfigurationTabGroup {
+	
+	public static final String LAUNCH_NAME = "Composite Run";
 
 	@Override
 	public void createTabs(ILaunchConfigurationDialog dialog, String mode) {

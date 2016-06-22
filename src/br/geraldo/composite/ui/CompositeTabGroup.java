@@ -12,7 +12,7 @@ public class CompositeTabGroup extends AbstractLaunchConfigurationTabGroup {
 
 	@Override
 	public void createTabs(ILaunchConfigurationDialog dialog, String mode) {
-		setTabs(new ILaunchConfigurationTab[] {new CompositeTab()} );
+		setTabs(new ILaunchConfigurationTab[] {new CompositeTab(), new CommonTab()} );
 		
 	}
 	

@@ -6,20 +6,29 @@
       <launchConfigurationType
             id="br.geraldo.composite.compositeLaunchType"
             delegate="br.geraldo.composite.delegate.CompositeDelegate"
-            name="Composite Run"
+            name="Composite Launch"
             modes="run, debug">
       </launchConfigurationType>
    </extension>
    
    
-   <extension
+<extension
     point="org.eclipse.debug.ui.launchConfigurationTabGroups">
     <launchConfigurationTabGroup
         class="br.geraldo.composite.ui.CompositeTabGroup"
         id="com.example.compositeLaunchConfigurationTabGroup"
         type="br.geraldo.composite.compositeLaunchType">
     </launchConfigurationTabGroup>
-</extension> 
+</extension>
+
+   <extension
+         point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+      <launchConfigurationTypeImage
+            configTypeID="br.geraldo.composite.compositeLaunchType"
+            icon="icons/star_red_16.png"
+            id="br.geraldo.compositelaunch.launchConfigurationTypeImage1">
+      </launchConfigurationTypeImage>
+   </extension> 
    
 
 

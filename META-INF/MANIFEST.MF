@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: CompositeRun
-Bundle-SymbolicName: br.geraldo.compositeRun;singleton:=true
+Bundle-SymbolicName: br.geraldo.compositelaunch;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: br.geraldo.composite.CompositePlugin
 Bundle-Vendor: Xored

@@ -4,6 +4,7 @@ package br.geraldo.composite.ui;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -189,6 +190,22 @@ public class CompositeTab extends AbstractLaunchConfigurationTab {
 		selected = new LinkedHashSet<Configuration>();
 		
 	}
+	
+	private void prepareSelectedConfigurations(Set<String> checkedMementos){
+		
+		List<ILaunchConfiguration> listLaunchConfig = new LinkedList<ILaunchConfiguration>();
+		try {
+			for(ILaunchConfiguration ilc : manager.getLaunchConfigurations()){
+				if(checkedMementos.contains(ilc.getMemento())){
+					listLaunchConfig.add(ilc);
+				}
+			}
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		CompositePlugin.setConfigurations(listLaunchConfig);
+	}
 
 	@Override
 	public void initializeFrom(ILaunchConfiguration configuration) {
@@ -200,10 +217,13 @@ public class CompositeTab extends AbstractLaunchConfigurationTab {
 					Configuration c = (Configuration) item.getData();
 					if(checkedMementos.contains(c.getMemento())){
 						item.setChecked(true);
+						selected.add(c);
 					}else{
 						item.setChecked(false);
 					}
 				}
+				
+				prepareSelectedConfigurations(checkedMementos);
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

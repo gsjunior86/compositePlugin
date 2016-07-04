@@ -14,9 +14,11 @@ import org.osgi.framework.BundleContext;
 public class CompositePlugin extends AbstractUIPlugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "br.geraldo.compositeRun"; //$NON-NLS-1$
+	public static final String PLUGIN_ID = "br.geraldo.compositeLaunch"; //$NON-NLS-1$
 	
 	public static final String COMPOSITE_CONFIGURATIONS = "compositeConfigurations";
+	
+	public static final String NO_CONFIGURATIONS_MESSAGE = "No Configurations were detected, please create new Configurations";
 
 	// The shared instance
 	private static CompositePlugin plugin;

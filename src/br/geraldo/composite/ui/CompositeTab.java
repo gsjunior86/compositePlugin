@@ -2,29 +2,28 @@ package br.geraldo.composite.ui;
 
 
 
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
-import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -37,7 +36,6 @@ import br.geraldo.composite.ui.table.ModelSource;
 
 public class CompositeTab extends AbstractLaunchConfigurationTab {
 
-	private Text text;
 	private TableViewer tableViewer;
 	private static final String COLUMN_NAME = "Name";
 	private static final String COLUMN_TYPE = "Type";
@@ -93,6 +91,7 @@ public class CompositeTab extends AbstractLaunchConfigurationTab {
 
 		createColumns(tableViewer);
 		
+		
 		final Table table = tableViewer.getTable();
 		table.removeAll();
 		table.setHeaderVisible(true);
@@ -118,7 +117,14 @@ public class CompositeTab extends AbstractLaunchConfigurationTab {
 		
 		tableViewer.setContentProvider(new ArrayContentProvider());
 		try {
-			tableViewer.setInput(ModelSource.getInstance(manager.getLaunchConfigurations()).getConfigList());
+			
+			List<Configuration> listConfig = ModelSource.getInstance(manager.getLaunchConfigurations()).getConfigList();
+			if(listConfig.isEmpty()){
+				setErrorMessage(CompositePlugin.NO_CONFIGURATIONS_MESSAGE);
+				tableViewer.getTable().setEnabled(false);
+			}else{
+				tableViewer.setInput(listConfig);
+			}
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -141,10 +147,10 @@ public class CompositeTab extends AbstractLaunchConfigurationTab {
 	 * 
 	 */
 	public void createColumns(TableViewer tableViewer){
-		String[] titles = {"",COLUMN_NAME,COLUMN_TYPE};
-		int[] bounds = { 50, 160, 150};
+		String[] titles = {"","",COLUMN_NAME,COLUMN_TYPE};
+		int[] bounds = { 30,20, 160, 150};
 		
-		TableViewerColumn colChecked = createTableViewerColumn(titles[0], bounds[0], 0);
+		TableViewerColumn colChecked = createTableViewerColumn(titles[0], bounds[0], 0,false);
 		colChecked.setLabelProvider(new ColumnLabelProvider() {
 		      @Override
 		      public String getText(Object element) {
@@ -152,7 +158,22 @@ public class CompositeTab extends AbstractLaunchConfigurationTab {
 		      }
 		 });
 		
-		TableViewerColumn colName = createTableViewerColumn(titles[1], bounds[1], 1);
+		TableViewerColumn colImage = createTableViewerColumn(titles[1], bounds[1], 1,false);
+		colImage.setLabelProvider(new ColumnLabelProvider() {
+			
+			@Override
+			public String getText(Object element) {
+				return "";
+			}
+			
+		      @Override
+		    public Image getImage(Object element) {
+		    	Configuration c = (Configuration) element;
+		    	return c.getImage();
+		    }
+		 });
+		
+		TableViewerColumn colName = createTableViewerColumn(titles[2], bounds[2], 2,true);
 		colName.setLabelProvider(new ColumnLabelProvider() {
 		      @Override
 		      public String getText(Object element) {
@@ -161,7 +182,7 @@ public class CompositeTab extends AbstractLaunchConfigurationTab {
 		      }
 		 });
 		
-		TableViewerColumn colType = createTableViewerColumn(titles[2], bounds[2], 2);
+		TableViewerColumn colType = createTableViewerColumn(titles[3], bounds[3], 3,true);
 		colType.setLabelProvider(new ColumnLabelProvider() {
 		      @Override
 		      public String getText(Object element) {
@@ -174,12 +195,12 @@ public class CompositeTab extends AbstractLaunchConfigurationTab {
 		
 	}
 	
-	public TableViewerColumn createTableViewerColumn(String title, int bound, final int colNumber){
+	public TableViewerColumn createTableViewerColumn(String title, int bound, final int colNumber,boolean resizable){
 		final TableViewerColumn viewerColumn = new TableViewerColumn(tableViewer, SWT.NONE);
 		 final TableColumn column = viewerColumn.getColumn();
 		 column.setText(title);
 		 column.setWidth(bound);
-		 column.setResizable(true);
+		 column.setResizable(resizable);
 		 column.setMoveable(true);
 		 return viewerColumn;
 		
@@ -230,20 +251,40 @@ public class CompositeTab extends AbstractLaunchConfigurationTab {
 		}
 		
 	}
+	
+	@Override
+	public boolean isValid(ILaunchConfiguration launchConfig) {
+		if(tableViewer.getTable().getItems().length == 0){
+			return false;
+		}
+		return super.isValid(launchConfig);
+	}
 
 	@Override
 	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
 		
-		
-		if(!selected.isEmpty()){
+		if(tableViewer.getTable().getItems().length != 0){
 			configuration.removeAttribute("selected");
 			Set<String> checkedMementos = new LinkedHashSet<String>();
-			for(Configuration c : selected){
-				checkedMementos.add(c.getMemento());
+			for(TableItem item: tableViewer.getTable().getItems()){
+				if(item.getChecked()){
+					Configuration c = (Configuration) item.getData();
+					checkedMementos.add(c.getMemento());
+				}
 			}
-			
 			configuration.setAttribute("selected", checkedMementos);
+			prepareSelectedConfigurations(checkedMementos);
 		}
+		
+//		if(!selected.isEmpty()){
+//			configuration.removeAttribute("selected");
+//			Set<String> checkedMementos = new LinkedHashSet<String>();
+//			for(Configuration c : selected){
+//				checkedMementos.add(c.getMemento());
+//			}
+//			
+//			configuration.setAttribute("selected", checkedMementos);
+//		}
 		
 		
 	}

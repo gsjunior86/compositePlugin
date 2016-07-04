@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.ui.DebugUITools;
+import org.eclipse.swt.graphics.Image;
 
 import br.geraldo.composite.ui.CompositeTabGroup;
 
@@ -22,7 +24,8 @@ public class ModelSource {
 				if(launchConfiguration.getType().getName().equals(CompositeTabGroup.LAUNCH_NAME)){
 					continue;
 				}
-				configList.add(new Configuration(launchConfiguration.getMemento(),launchConfiguration.getName(),launchConfiguration.getType().getName()));
+				Image image = DebugUITools.getImage(launchConfiguration.getType().getIdentifier());
+				configList.add(new Configuration(launchConfiguration.getMemento(),image,launchConfiguration.getName(),launchConfiguration.getType().getName()));
 			} catch (CoreException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

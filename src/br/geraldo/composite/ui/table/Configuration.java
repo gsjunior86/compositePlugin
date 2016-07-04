@@ -1,14 +1,18 @@
 package br.geraldo.composite.ui.table;
 
+import org.eclipse.swt.graphics.Image;
+
 public class Configuration {
 
 	
 	private String memento;
+	private Image image;
 	private String name;
 	private String type;
 	
-	public Configuration(String memento, String name, String type){
+	public Configuration(String memento,Image image, String name, String type){
 		this.memento = memento;
+		this.setImage(image);
 		this.name = name;
 		this.type = type;
 	}
@@ -40,6 +44,16 @@ public class Configuration {
 	}
 	public void setType(String type) {
 		this.type = type;
+	}
+
+
+	public Image getImage() {
+		return image;
+	}
+
+
+	public void setImage(Image image) {
+		this.image = image;
 	}
 	
 	

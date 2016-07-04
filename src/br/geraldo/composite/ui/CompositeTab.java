@@ -8,13 +8,12 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
-import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -23,12 +22,10 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.swt.widgets.Text;
 
 import br.geraldo.composite.CompositePlugin;
 import br.geraldo.composite.ui.table.Configuration;
@@ -61,7 +58,6 @@ public class CompositeTab extends AbstractLaunchConfigurationTab {
 		        | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER | SWT.CHECK);
 		
 		createTableViewer();
-		selected = new LinkedHashSet<Configuration>();
 	    setControl(tableViewer.getTable());
 	    
 //	    GridLayoutFactory.swtDefaults().numColumns(2).applyTo(comp);
@@ -104,10 +100,10 @@ public class CompositeTab extends AbstractLaunchConfigurationTab {
 		    	  Configuration c = (Configuration) event.item.getData();
 		    	  if (event.detail == SWT.CHECK) {
 			    	  if(selected.contains(c)){
-			    		  selected.remove(c);
+			    	
 			    		  updateLaunchConfigurationDialog();
 			    	  }else{
-			    		  selected.add(c);
+			    		  
 			    		  updateLaunchConfigurationDialog();
 			    	  }
 		    	  }
@@ -213,7 +209,7 @@ public class CompositeTab extends AbstractLaunchConfigurationTab {
 	}
 	
 	private void prepareSelectedConfigurations(Set<String> checkedMementos){
-		
+
 		List<ILaunchConfiguration> listLaunchConfig = new LinkedList<ILaunchConfiguration>();
 		try {
 			for(ILaunchConfiguration ilc : manager.getLaunchConfigurations()){

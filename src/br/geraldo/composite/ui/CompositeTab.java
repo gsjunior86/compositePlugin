@@ -36,7 +36,6 @@ public class CompositeTab extends AbstractLaunchConfigurationTab {
 	private static final String COLUMN_NAME = "Name";
 	private static final String COLUMN_TYPE = "Type";
 	private final ILaunchManager manager;
-	private Set<Configuration> selected;
 	
 	
 	public CompositeTab() {
@@ -96,15 +95,8 @@ public class CompositeTab extends AbstractLaunchConfigurationTab {
 		
 		table.addListener(SWT.Selection, new Listener() {
 		      public void handleEvent(Event event) {
-		    	  Configuration c = (Configuration) event.item.getData();
 		    	  if (event.detail == SWT.CHECK) {
-			    	  if(selected.contains(c)){
-			    	
-			    		  updateLaunchConfigurationDialog();
-			    	  }else{
-			    		  
-			    		  updateLaunchConfigurationDialog();
-			    	  }
+			    		  updateLaunchConfigurationDialog();	  
 		    	  }
 			    }
 		});
@@ -203,7 +195,7 @@ public class CompositeTab extends AbstractLaunchConfigurationTab {
 
 	@Override
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration) {
-		selected = new LinkedHashSet<Configuration>();
+		
 		
 	}
 	
@@ -233,7 +225,7 @@ public class CompositeTab extends AbstractLaunchConfigurationTab {
 					Configuration c = (Configuration) item.getData();
 					if(checkedMementos.contains(c.getMemento())){
 						item.setChecked(true);
-						selected.add(c);
+						
 					}else{
 						item.setChecked(false);
 					}
